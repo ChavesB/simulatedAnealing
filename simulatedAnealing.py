@@ -1,8 +1,8 @@
 # =============================================================================
-# INICIO DO PROGRAMA - Autor: Bruno Cesar Alves Costa
+# INICIO DO PROGRAMA
 # =============================================================================
 
-#Digitar no console do spyder ou IPython %matplotlib auto
+#Digitar no spyder ou IPython %matplotlib auto
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -44,6 +44,18 @@ def Energia(psx, psy):
     dx = ax[1:-1] - ax[:-2]
     dy = ay[1:-1] - ax[:-2]
     return np.sqrt(np.sum(dx**2) + np.sum(dy**2))
+
+def intersec2d(pi1,pf1,pi2,pf2):
+    
+    det = (pf2[0]-pi2[0])*(pf1[1]-pi1[1]) - (pf2[1]-pi2[1])*(pf1[0] - pi1[0])
+    
+    if(det == 0):
+        return 0,0
+    
+    s = ((pf2[0]-pi2[0])*(pi2[1]-pi1[1])-(pf2[1]-pi2[1])*(pi2[0]-pi1[0]))/det
+    t = ((pf1[0]-pi1[0])*(pi2[1]-pi1[1])-(pf1[1]-pi1[1])*(pi2[0]-pi1[0]))/det
+    
+    return s,t
 
 def Perturba(x, y, p):
     
@@ -136,7 +148,48 @@ def Perturba(x, y, p):
             x[i],x[2] = x[2],x[i]
             y[i],y[2] = y[2],y[i]
     
-    ####### Arestas Concorrentes ########
+    ####### Intersecção de retas ########
+    
+    i,j = 0,0
+
+    while(i>=j):
+        i,j = np.random.randint(0,len(arestas),size=2,dtype=int)
+        if(j == len(arestas)-1 and i<2):
+            i,j = 0,0
+        elif(i==0 and j< len(arestas)-2):
+            i,j = 0,0
+    s,t = 0,0
+    if(i>0 and j<(len(arestas)-1)):
+        s,t = intersec2d(arestas[i],arestas[i-1],arestas[j],arestas[j+1])
+        k = arestas[i]
+        l = arestas[i-1]
+        m = arestas[j]
+        n = arestas[j+1]
+    elif(i==0 and j<(len(arestas)-2)):
+        s,t = intersec2d(arestas[i],arestas[len(arestas)-1],arestas[j],arestas[j+1])
+        k = arestas[i]
+        l = arestas[len(arestas)-1]
+        m = arestas[j]
+        n = arestas[j+1]
+    elif(i>1 and j==(len(arestas)-1)):
+        s,t = intersec2d(arestas[i],arestas[i-1],arestas[j],arestas[0])
+        k = arestas[i]
+        l = arestas[i-1]
+        m = arestas[j]
+        n = arestas[0]        
+    
+    if(s != 0 and t != 0):
+        px1 = k[0] + (l[0]-k[0])*s
+        py1 = k[1] + (l[1]-k[1])*s
+        px2 = m[0] + (n[0]-m[0])*t
+        py2 = m[1] + (n[1]-m[1])*t
+    
+        if(px1 == px2 and py1 == py2):
+            if(px1<max(k[0],l[0]) and px1>min(k[0],l[0]) and py1<max(k[1],l[1]) and py1>min(k[1],l[1])):
+                p[i],p[j] = p[j],p[i]
+                x[i],x[j] = x[j],x[i]
+                y[i],y[j] = y[j],y[i]
+
 
 
 '''
@@ -169,7 +222,7 @@ plt.plot(xl,yl,xl,yl,'ro')
 
 total = 0
 
-KB=8.61*10**(-5)       #constante de Boltzman
+KB=8.61*10**(-5)       #constante de Boltzman em eV/K
 escala=0.1             #escala de redução da temperatura
 suc = False
 t = 300
@@ -177,7 +230,7 @@ t = 300
 e1 = Energia(xl,yl)
 plt.title("Energia: "+str(e1))
 plt.draw() 
-plt.pause(0.00005) 
+plt.pause(0.0005) 
     
 sucesso = 0
 fracasso = 0
@@ -220,7 +273,7 @@ while total < 10:
             plt.title("Energia: "+str(e2))
             plt.draw()
 
-            plt.pause(0.0000005)
+            plt.pause(0.00005)
         else:
             x = xcopy
             y = ycopy
