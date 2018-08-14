@@ -1,8 +1,8 @@
 # =============================================================================
-# INICIO DO PROGRAMA
+# INICIO DO PROGRAMA - Autor: Bruno Cesar Alves Costa
 # =============================================================================
 
-#Digitar no spyder ou IPython %matplotlib auto
+#Digitar no console do spyder ou IPython %matplotlib auto
 import matplotlib.pyplot as plt
 import numpy as np
 
