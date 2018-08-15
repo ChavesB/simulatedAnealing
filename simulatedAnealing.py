@@ -149,46 +149,49 @@ def Perturba(x, y, p):
             y[i],y[2] = y[2],y[i]
     
     ####### Intersecção de retas ########
+    for b in range(0,3):
+        i = np.random.randint(0,len(arestas),dtype=int)
     
-    i,j = 0,0
+        j=i
+        
+        while(i==j or j==i-1 or i-1==j+1):
+            j = np.random.randint(0,len(arestas),dtype=int)
+            if(((i==0 or i==1)  and j==len(arestas)-1) or (i==0 and j==len(arestas)-2) or (j==0 and i==1)):
+                j = i
+    
+        s,t = 0,0
+        if(i==0 and j>0):
+            s,t = intersec2d(arestas[i],arestas[len(arestas)-1],arestas[j],arestas[j+1])
+            k = arestas[i]
+            l = arestas[len(arestas)-1]
+            m = arestas[j]
+            n = arestas[j+1]
+        elif(j==(len(arestas)-1)):
+            s,t = intersec2d(arestas[i],arestas[i-1],arestas[j],arestas[0])
+            k = arestas[i]
+            l = arestas[i-1]
+            m = arestas[j]
+            n = arestas[0]
+        else:
+            s,t = intersec2d(arestas[i],arestas[i-1],arestas[j],arestas[j+1])
+            k = arestas[i]
+            l = arestas[i-1]
+            m = arestas[j]
+            n = arestas[j+1]
+        
+        if(s != 0 and t != 0):
+            px1 = k[0] + (l[0]-k[0])*s
+            py1 = k[1] + (l[1]-k[1])*s
+            px2 = m[0] + (n[0]-m[0])*t
+            py2 = m[1] + (n[1]-m[1])*t
+        
+            if(px1 == px2 and py1 == py2):
+                if(px1<max(k[0],l[0]) and px1>min(k[0],l[0]) and py1<max(k[1],l[1]) and py1>min(k[1],l[1])):
+                    p[i],p[j] = p[j],p[i]
+                    x[i],x[j] = x[j],x[i]
+                    y[i],y[j] = y[j],y[i]
 
-    while(i>=j):
-        i,j = np.random.randint(0,len(arestas),size=2,dtype=int)
-        if(j == len(arestas)-1 and i<2):
-            i,j = 0,0
-        elif(i==0 and j< len(arestas)-2):
-            i,j = 0,0
-    s,t = 0,0
-    if(i>0 and j<(len(arestas)-1)):
-        s,t = intersec2d(arestas[i],arestas[i-1],arestas[j],arestas[j+1])
-        k = arestas[i]
-        l = arestas[i-1]
-        m = arestas[j]
-        n = arestas[j+1]
-    elif(i==0 and j<(len(arestas)-2)):
-        s,t = intersec2d(arestas[i],arestas[len(arestas)-1],arestas[j],arestas[j+1])
-        k = arestas[i]
-        l = arestas[len(arestas)-1]
-        m = arestas[j]
-        n = arestas[j+1]
-    elif(i>1 and j==(len(arestas)-1)):
-        s,t = intersec2d(arestas[i],arestas[i-1],arestas[j],arestas[0])
-        k = arestas[i]
-        l = arestas[i-1]
-        m = arestas[j]
-        n = arestas[0]        
-    
-    if(s != 0 and t != 0):
-        px1 = k[0] + (l[0]-k[0])*s
-        py1 = k[1] + (l[1]-k[1])*s
-        px2 = m[0] + (n[0]-m[0])*t
-        py2 = m[1] + (n[1]-m[1])*t
-    
-        if(px1 == px2 and py1 == py2):
-            if(px1<max(k[0],l[0]) and px1>min(k[0],l[0]) and py1<max(k[1],l[1]) and py1>min(k[1],l[1])):
-                p[i],p[j] = p[j],p[i]
-                x[i],x[j] = x[j],x[i]
-                y[i],y[j] = y[j],y[i]
+
 
 
 
@@ -206,7 +209,7 @@ xl.append(xl[0])
 yl.append(yl[0])
 plt.suptitle("Tempera Simulada Para Problema do Caixeiro Viajante - Processando...\n\n")
 plt.subplot(1,2,1)
-plt.plot(xl,yl,'c-',xl,yl,'ro') 
+plt.plot(xl,yl,'c-',xl,yl,'ro')
 plt.title("Configuração Inicial")
 Perturba(x,y,p)    
 plt.axis([-1,31,-1,31])
@@ -230,7 +233,7 @@ t = 300
 e1 = Energia(xl,yl)
 plt.title("Energia: "+str(e1))
 plt.draw() 
-plt.pause(0.0005) 
+plt.pause(2) 
     
 sucesso = 0
 fracasso = 0
@@ -273,7 +276,7 @@ while total < 10:
             plt.title("Energia: "+str(e2))
             plt.draw()
 
-            plt.pause(0.00005)
+            plt.pause(0.0005)
         else:
             x = xcopy
             y = ycopy
