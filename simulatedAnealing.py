@@ -1,8 +1,11 @@
 # =============================================================================
-# INICIO DO PROGRAMA - Autor: Bruno Cesar Alves Costa
+# Autor: Bruno Cesar Alves Costa - RGM: 31350
+# Trabalho de Inteligência Artificial do Simulated Annealing
+# INICIO DO PROGRAMA 
 # =============================================================================
 
 #Digitar no console do spyder ou IPython %matplotlib auto
+
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -196,7 +199,7 @@ def Perturba(x, y, p):
 
 
 '''
-Inicio do Códigos
+Inicio da Execução
 '''
 plt.close()
 plt.ion()
@@ -225,15 +228,15 @@ plt.plot(xl,yl,xl,yl,'ro')
 
 total = 0
 
-KB=8.61*10**(-5)       #constante de Boltzman em eV/K
+KB=8.61*10**(-5)       #constante de Boltzman em eV/K (eletron volts / kelvin)
 escala=0.1             #escala de redução da temperatura
 suc = False
-t = 300
+t = 373.15
 
 e1 = Energia(xl,yl)
 plt.title("Energia: "+str(e1))
 plt.draw() 
-plt.pause(2) 
+plt.pause(3) 
     
 sucesso = 0
 fracasso = 0
@@ -244,7 +247,8 @@ while total < 10:
     while ( (not(sucesso<=100))|(fracasso<=1000)) and ((sucesso<=100)|(not(fracasso<=1000)) ):
         xcopy = x.copy()
         ycopy = y.copy()
-        pcopy = p.copy()                
+        pcopy = p.copy()
+                
         Perturba(x, y, p)
         xl=list(x)
         yl=list(y)
@@ -276,7 +280,7 @@ while total < 10:
             plt.title("Energia: "+str(e2))
             plt.draw()
 
-            plt.pause(0.0005)
+            plt.pause(0.00005)
         else:
             x = xcopy
             y = ycopy
@@ -297,5 +301,8 @@ plt.title("Energia: "+str(e1))
 plt.draw()
 
 '''
-Fim Código
+Fim da Execução
 '''
+#==============================================================================
+#FIM DO PROGRAMA
+#==============================================================================
